@@ -1,5 +1,5 @@
 /-  blog
-/+  dbug, default-agent, blog-lib=blog
+/+  dbug, default-agent
 ::
 %-  agent:dbug
 ^-  agent:gall
