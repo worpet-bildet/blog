@@ -5,7 +5,9 @@
 ^-  agent:gall
 =>  |%
     +$  versioned-state  $%(state-0)
-    +$  state-0  a=@
+    +$  state-0
+      $:  files=(map path (pair html=@t md=@t))
+      ==
     --
 =|  state-0
 =*  state  -
@@ -16,27 +18,20 @@
     hc    ~(. +> bowl)
     card  card:agent:gall
 ++  on-init  on-init:def
-++  on-save  on-save:def
-++  on-load  on-load:def
+++  on-save  !>(state)
+++  on-load  |=(=vase `this)
 ++  on-poke
   |=  [=mark =vase]
   ?>  =(%blog-action mark)
   =+  !<(act=action:blog vase)
   ?-    -.act
       %save-file
-    =*  fil  [%posts (weld file.act /html)]
-    =*  nor  `nori:clay`[%& [fil %ins %html !>(text.act)]~]
-    :_  this
-    :~  [%pass / %arvo %c %info %blog nor]
-        [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
-    ==
+    :_  this(files (~(put by files) [path html md]:act))
+    [%pass /serve %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
   ::
       %delete-file
-    =*  nor  `nori:clay`[%& [file.act %del ~]~]
-    :_  this
-    :~  [%pass / %arvo %c %info %blog nor]
-        [%pass /serve %arvo %e %disconnect `file.act]
-    ==
+    :_  this(files (~(del by files) path.act))
+    [%pass /serve %arvo %e %disconnect `path.act]~
   ==
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
@@ -45,31 +40,21 @@
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-      [%x %existing-bindings ~]
+      [%x %md ^]    ``json+!>([%s q:(~(got by files) t.t.path)])
+      [%x %html ^]  ``noun+!>(p:(~(got by files) t.t.path))
+      [%x %binds ~]
+    :^  ~  ~  %json
+    !>  :-  %a
+    %+  turn  ~(tap by files)
+    |=([=^path *] `json`(path:enjs:format path))
+  ::
+      [%x %existing-bindings ~] :: TODO probably get rid of this in favor of just above
     =*  pax  /(scot %p our.bowl)/bindings/(scot %da now.bowl)
     :^  ~  ~  %bindings  !>
     .^((list [binding:eyre duct action:eyre]) %e pax)
-  ::
-      [%x %md *]
-    :: TODO need to put/scry out actual md files
-    :^  ~  ~  %md :: TODO maybe just use a mime type instead of md
-    !>(['# %studio test file' ~])
-  ::
   ==
 ::
-++  on-arvo
-  |=  [=wire =sign-arvo]
-  ^-  (quip card _this)
-  ?+    wire  (on-arvo:def wire sign-arvo)
-      [%serve ~]
-    ?>  ?=(%eyre -.sign-arvo)
-    ?>  ?=(%bound +<.sign-arvo)
-    ?-    accepted.sign-arvo
-      %|  ~&(>>> "%blog: {<path.binding.sign-arvo>} failed bind" `this)
-      %&  ~&("%blog: {<path.binding.sign-arvo>} successful bind" `this)
-    ==
-  ==
-::
+++  on-arvo  on-arvo:def
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
 --

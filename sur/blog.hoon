@@ -1,6 +1,6 @@
 |%
 +$  action
-  $%  [%save-file file=path text=@t] :: TODO needs to be text and md
-      [%delete-file file=path]
+  $%  [%save-file =path html=@t md=@t] :: TODO needs to be text and md
+      [%delete-file =path]
   ==
 --

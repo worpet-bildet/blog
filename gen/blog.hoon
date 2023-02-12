@@ -4,11 +4,11 @@
 =*  data
   %-  as-octs:mimes:html
   .^  @t
-      %cx
+      %gx
       ;:  weld
-        /(scot %p p.byk)/blog/(scot r.byk)/posts
+        /(scot %p p.byk)/blog/(scot r.byk)/html
         (pa:dejs:format [%s url.request])
-        /html
+        /noun
       ==
   ==
 :_  `(unit octs)``data
