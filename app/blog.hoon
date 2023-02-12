@@ -11,15 +11,16 @@
     --
 =|  state-0
 =*  state  -
-=<
 |_  bowl=bowl:gall
 +*  this  .
     def   ~(. (default-agent this %.n) bowl)
-    hc    ~(. +> bowl)
     card  card:agent:gall
 ++  on-init  on-init:def
 ++  on-save  !>(state)
-++  on-load  |=(=vase `this)
+++  on-load
+  |=  =vase
+  =+  !<(old=state-0 vase)
+  `this(state old)
 ++  on-poke
   |=  [=mark =vase]
   ?>  =(%blog-action mark)
@@ -55,20 +56,6 @@
   ?+  wire  (on-arvo:def wire sign-arvo)
     [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
   ==
-
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
---
-::
-|_  =bowl:gall
-++  make-http-response
-  |=  $:  paths=(list path)
-          header=response-header:http
-          data=octs
-      ==
-  ^-  (list card:agent:gall)
-  :~  [%give %fact paths [%http-response-header !>(header)]]
-      [%give %fact paths [%http-response-data !>(`data)]]
-      [%give %kick paths ~]
-  ==
 --
