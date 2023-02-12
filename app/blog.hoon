@@ -15,46 +15,32 @@
     def   ~(. (default-agent this %.n) bowl)
     hc    ~(. +> bowl)
     card  card:agent:gall
-++  on-init
-  :_  this
-  :: TODO this should go through docket later...
-  [%pass /bind %arvo %e %connect `/blog dap.bowl]~
+++  on-init  `this
 ++  on-save  on-save:def
 ++  on-load  on-load:def
 ++  on-poke
   |=  [=mark =vase]
-  ?+    mark  (on-poke:def mark vase)
-      %handle-http-request
-    =+  !<([rid=@tas req=inbound-request:eyre] vase)
-    :: if it's /edit then enforce authentication, otherwise just serve the blog
+  ?>  =(%blog-action mark)
+  =+  !<(act=action:blog vase)
+  ?-    -.act
+      %unbind-post :: TODO probably dont' need this
     :_  this
-    %^    make-http-response:hc
-        [/http-response/[rid]]~
-      [200 ~]
-    (as-octs:mimes:html '<h1>hello world</h1>')
+    [%pass /bind %arvo %e %disconnect `bind.act]~
   ::
-      %blog-action
-    =+  !<(act=action:blog vase)
-    ?-    -.act
-        %unbind-post :: TODO probably dont' need this
-      :_  this
-      [%pass /bind %arvo %e %disconnect `bind.act]~
-    ::
-        %save-file
-      ~&  >  text.act
-      ~&  >  file.act
-      ::  /=blog=/blogs/...
-      =*  file  [%posts file.act]
-      =*  nor  `nori:clay`[%& [file %ins %html !>(text.act)]~]
-      :_  this
-      :~  [%pass / %arvo %c %info %blog nor]
-          [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
-      ==
-    ::
-        %delete-file  :: TODO unbind here as well
-      =*  nor  `nori:clay`[%& [file.act %del ~]~]
-      [%pass / %arvo %c %info %blog nor]~^this
+      %save-file
+    ~&  >  text.act
+    ~&  >  file.act
+    ::  /=blog=/blogs/...
+    =*  file  [%posts file.act]
+    =*  nor  `nori:clay`[%& [file %ins %html !>(text.act)]~]
+    :_  this
+    :~  [%pass / %arvo %c %info %blog nor]
+        [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
     ==
+  ::
+      %delete-file  :: TODO unbind here as well
+    =*  nor  `nori:clay`[%& [file.act %del ~]~]
+    [%pass / %arvo %c %info %blog nor]~^this
   ==
 ++  on-agent  on-agent:def
 ++  on-watch
