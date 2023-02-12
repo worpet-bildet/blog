@@ -27,11 +27,11 @@
   ?-    -.act
       %save-file
     :_  this(files (~(put by files) [path html md]:act))
-    [%pass /serve %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
+    [%pass /bind %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
   ::
       %delete-file
     :_  this(files (~(del by files) path.act))
-    [%pass /serve %arvo %e %disconnect `path.act]~
+    [%pass /bind %arvo %e %disconnect `path.act]~
   ==
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
@@ -42,19 +42,20 @@
   ::
       [%x %md ^]    ``json+!>([%s q:(~(got by files) t.t.path)])
       [%x %html ^]  ``noun+!>(p:(~(got by files) t.t.path))
-      [%x %binds ~]
+      [%x %pages ~]
     :^  ~  ~  %json
     !>  :-  %a
     %+  turn  ~(tap by files)
     |=([=^path *] `json`(path:enjs:format path))
-  ::
-      [%x %existing-bindings ~] :: TODO probably get rid of this in favor of just above
-    =*  pax  /(scot %p our.bowl)/bindings/(scot %da now.bowl)
-    :^  ~  ~  %bindings  !>
-    .^((list [binding:eyre duct action:eyre]) %e pax)
   ==
 ::
-++  on-arvo  on-arvo:def
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  (quip card _this)
+  ?+  wire  (on-arvo:def wire sign-arvo)
+    [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
+  ==
+
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
 --
