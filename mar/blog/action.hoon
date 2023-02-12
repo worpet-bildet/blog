@@ -7,9 +7,8 @@
   ++  json
     =,  dejs:format
     %-  of
-    :~  [%unbind-post pa]
-        [%save-file (ot ~[file+pa text+so])]
-        [%delete-file pa]
+    :~  [%save-file (ot ~[file+pa text+so])]
+        [%delete-file (ot ~[file+pa])]
     ==
   --
 ::

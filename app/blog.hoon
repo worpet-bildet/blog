@@ -15,7 +15,7 @@
     def   ~(. (default-agent this %.n) bowl)
     hc    ~(. +> bowl)
     card  card:agent:gall
-++  on-init  `this
+++  on-init  on-init:def
 ++  on-save  on-save:def
 ++  on-load  on-load:def
 ++  on-poke
@@ -23,14 +23,7 @@
   ?>  =(%blog-action mark)
   =+  !<(act=action:blog vase)
   ?-    -.act
-      %unbind-post :: TODO probably dont' need this
-    :_  this
-    [%pass /bind %arvo %e %disconnect `bind.act]~
-  ::
       %save-file
-    ~&  >  text.act
-    ~&  >  file.act
-    ::  /=blog=/blogs/...
     =*  file  [%posts file.act]
     =*  nor  `nori:clay`[%& [file %ins %html !>(text.act)]~]
     :_  this
@@ -38,15 +31,15 @@
         [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
     ==
   ::
-      %delete-file  :: TODO unbind here as well
+      %delete-file
     =*  nor  `nori:clay`[%& [file.act %del ~]~]
-    [%pass / %arvo %c %info %blog nor]~^this
+    :_  this
+    :~  [%pass / %arvo %c %info %blog nor]
+        [%pass /serve %arvo %e %disconnect `file.act]
+    ==
   ==
 ++  on-agent  on-agent:def
-++  on-watch
-  |=  =path
-  ^-  (quip card _this)
-  ?>(?=([%http-response *] path) `this)
+++  on-watch  on-watch:def
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
@@ -57,20 +50,10 @@
     :^  ~  ~  %bindings  !>
     .^((list [binding:eyre duct action:eyre]) %e pax)
   ::
-      [%x %posts ~]
-    =*  pax  /(scot %p our.bowl)/blog/(scot %da now.bowl)/blogs
-    ``arch+!>((turn ~(tap by dir:.^(arch %cy pax)) head))
-  ::
-      [%x %content ^]
-    :^  ~  ~  %html
-    !>  ^-  cord
-    %-  of-wain:format
-    .^  wain
-        %cx
-        %+  weld
-          /(scot %p our.bowl)/blog/(scot %da now.bowl)/blog
-        t.t.path
-    ==
+      [%x %md *]
+    :: TODO need to put/scry out actual md files
+    :^  ~  ~  %md
+    !>(['# %studio test file' ~])
   ::
   ==
 ::
