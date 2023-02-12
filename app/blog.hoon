@@ -24,8 +24,8 @@
   =+  !<(act=action:blog vase)
   ?-    -.act
       %save-file
-    =*  file  [%posts file.act]
-    =*  nor  `nori:clay`[%& [file %ins %html !>(text.act)]~]
+    =*  fil  [%posts (weld file.act /html)]
+    =*  nor  `nori:clay`[%& [fil %ins %html !>(text.act)]~]
     :_  this
     :~  [%pass / %arvo %c %info %blog nor]
         [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
@@ -52,7 +52,7 @@
   ::
       [%x %md *]
     :: TODO need to put/scry out actual md files
-    :^  ~  ~  %md
+    :^  ~  ~  %md :: TODO maybe just use a mime type instead of md
     !>(['# %studio test file' ~])
   ::
   ==
