@@ -5,12 +5,9 @@
   |%
   ++  noun  action:blog
   ++  json
-    |=  jon=^json
     =,  dejs:format
-    ^-  action:pyro
     %-  of
-    :~  [%blog-bind pa]
-        [%blog-unbind pa]
+    :~  [%unbind-post pa]
         [%save-file (ot ~[file+pa text+so])]
         [%delete-file pa]
     ==

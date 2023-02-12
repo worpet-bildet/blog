@@ -36,26 +36,22 @@
       %blog-action
     =+  !<(act=action:blog vase)
     ?-    -.act
-        %blog-bind
+        %unbind-post :: TODO probably dont' need this
       :_  this
-      [%pass /bind %arvo %e %connect `path.act dap.bowl]~
-    ::
-        %blog-unbind
-      :_  this
-      [%pass /bind %arvo %e %disconnect `path.act]~
+      [%pass /bind %arvo %e %disconnect `bind.act]~
     ::
         %save-file
       ~&  >  text.act
       ~&  >  file.act
       ::  /=blog=/blogs/...
-      =*  file
-        %+  weld
-          /(scot %p our.bowl)/blog/(scot %da now.bowl)/blogs
-        file.act
+      =*  file  [%posts file.act]
       =*  nor  `nori:clay`[%& [file %ins %html !>(text.act)]~]
-      [%pass / %arvo %c %info %blog nor]~^this
+      :_  this
+      :~  [%pass / %arvo %c %info %blog nor]
+          [%pass /serve %arvo %e %serve `file.act dap.bowl /gen/blog/hoon ~]
+      ==
     ::
-        %delete-file
+        %delete-file  :: TODO unbind here as well
       =*  nor  `nori:clay`[%& [file.act %del ~]~]
       [%pass / %arvo %c %info %blog nor]~^this
     ==
@@ -70,12 +66,16 @@
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-    ::   [%x %existing-bindings ~]
-    :: =*  pax  /(scot %p our.bowl)/bindings/(scot %da now.bowl)
-    :: :^  ~  ~  %bindings  !>
-    :: .^((list [binding:eyre duct action:eyre]) %e pax)
+      [%x %existing-bindings ~]
+    =*  pax  /(scot %p our.bowl)/bindings/(scot %da now.bowl)
+    :^  ~  ~  %bindings  !>
+    .^((list [binding:eyre duct action:eyre]) %e pax)
   ::
-      [%x %blog ^]
+      [%x %posts ~]
+    =*  pax  /(scot %p our.bowl)/blog/(scot %da now.bowl)/blogs
+    ``arch+!>((turn ~(tap by dir:.^(arch %cy pax)) head))
+  ::
+      [%x %content ^]
     :^  ~  ~  %html
     !>  ^-  cord
     %-  of-wain:format
@@ -92,7 +92,7 @@
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
   ?+    wire  (on-arvo:def wire sign-arvo)
-      [%bind ~]
+      [%serve ~]
     ?>  ?=(%eyre -.sign-arvo)
     ?>  ?=(%bound +<.sign-arvo)
     ?-    accepted.sign-arvo
