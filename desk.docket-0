@@ -1,0 +1,10 @@
+:~  title+'%blog'
+    info+'a tool for publishing'
+    color+0x57.3c7c
+    image+''
+    base+'blog'
+    glob-ames+[~zod 0v0]
+    version+[0 1 0]
+    website+'blog'
+    license+'MIT'
+==
