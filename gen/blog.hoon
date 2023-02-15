@@ -12,4 +12,4 @@
       ==
   ==
 :_  `(unit octs)``data
-`response-header:http`[200 ['Content-Type' 'text/html']~]
+`response-header:http`[200 ['Content-Type' 'text/html; charset=utf-8']~]
