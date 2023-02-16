@@ -41,8 +41,9 @@
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-      [%x %md ^]    ``json+!>([%s q:(~(got by files) t.t.path)])
-      [%x %html ^]  ``noun+!>(p:(~(got by files) t.t.path))
+      [%x %md ^]    ``blog+!>(q:(~(got by files) t.t.path))
+      [%x %html ^]  ``blog+!>(p:(~(got by files) t.t.path))
+  ::
       [%x %pages ~]
     :^  ~  ~  %json
     !>  :-  %a
