@@ -66,10 +66,12 @@
       [%x %draft @ ~]  ``blog+!>((~(got by drafts) i.t.t.path))
   ::
       [%x %pages ~]
-    :^  ~  ~  %json
-    !>  :-  %a
-    %+  turn  ~(tap by files)
-    |=([=^path *] `json`(path:enjs:format path))
+    =;  pages  ``json+!>([%a pages])
+    (turn ~(tap by files) |=([=^path *] (path:enjs:format path)))
+  ::
+      [%x %drafts ~]
+    =;  names  ``json+!>([%a names])
+    (turn ~(tap by drafts) |=([t=term *] [%s t]))
   ::
       [%x %all-bindings ~]
     :^  ~  ~  %json  !>
