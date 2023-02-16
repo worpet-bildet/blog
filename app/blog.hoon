@@ -11,7 +11,7 @@
     +$  state-1
       $:  %1
           files=(map path (pair html=@t md=@t))
-          drafts=(map term md=@t)
+          drafts=(map path md=@t)
       ==
     --
 =|  state-1
@@ -40,19 +40,19 @@
   ?>  =(%blog-action mark)
   =+  !<(act=action:blog vase)
   ?-    -.act
-      %save-file
+      %publish
     :_  this(files (~(put by files) [path html md]:act))
     [%pass /bind %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
   ::
-      %delete-file
+      %unpublish
     :_  this(files (~(del by files) path.act))
     [%pass /bind %arvo %e %disconnect `path.act]~
   ::
       %save-draft  
-    `this(drafts (~(put by drafts) [name md]:act))
+    `this(drafts (~(put by drafts) [path md]:act))
   ::
       %delete-draft
-    `this(drafts (~(del by drafts) name.act))
+    `this(drafts (~(del by drafts) path.act))
   ==
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
@@ -61,9 +61,12 @@
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-      [%x %md ^]       ``blog+!>(q:(~(got by files) t.t.path))
-      [%x %html ^]     ``blog+!>(p:(~(got by files) t.t.path))
-      [%x %draft @ ~]  ``blog+!>((~(got by drafts) i.t.t.path))
+      [%x %md ^]     ``blog+!>(q:(~(got by files) t.t.path))
+      [%x %html ^]   ``blog+!>(p:(~(got by files) t.t.path))
+      [%x %draft ^]
+    ~&  >  t.t.path
+    ~&  >  (~(has by drafts) t.t.path)
+    ``blog+!>((~(got by drafts) t.t.path))
   ::
       [%x %pages ~]
     =;  pages  ``json+!>([%a pages])
@@ -71,7 +74,7 @@
   ::
       [%x %drafts ~]
     =;  names  ``json+!>([%a names])
-    (turn ~(tap by drafts) |=([t=term *] [%s t]))
+    (turn ~(tap by drafts) |=([=^path *] (path:enjs:format path)))
   ::
       [%x %all-bindings ~]
     =;  the-thing  ``json+!>(the-thing)
@@ -90,7 +93,7 @@
       %logout          [%s '%logout']
       %channel         [%s '%channel']
       %scry            [%s '%scry']
-      %name            [%s '%name']
+      :: %name            [%s '%name'] :: TODO next release
       %four-oh-four    [%s '%four-oh-four']
     ==
   ==
