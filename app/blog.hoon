@@ -63,10 +63,7 @@
   ::
       [%x %md ^]     ``blog+!>(q:(~(got by files) t.t.path))
       [%x %html ^]   ``blog+!>(p:(~(got by files) t.t.path))
-      [%x %draft ^]
-    ~&  >  t.t.path
-    ~&  >  (~(has by drafts) t.t.path)
-    ``blog+!>((~(got by drafts) t.t.path))
+      [%x %draft ^]  ``blog+!>((~(got by drafts) t.t.path))
   ::
       [%x %pages ~]
     =;  pages  ``json+!>([%a pages])
