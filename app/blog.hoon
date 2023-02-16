@@ -4,12 +4,17 @@
 %-  agent:dbug
 ^-  agent:gall
 =>  |%
-    +$  versioned-state  $%(state-0)
-    +$  state-0
-      $:  files=(map path (pair html=@t md=@t))
+    +$  versioned-state
+      $%  state-1
+      ==
+    +$  state-0  (map path (pair html=@t md=@t))
+    +$  state-1
+      $:  %1
+          files=(map path (pair html=@t md=@t))
+          drafts=(map path md=@t)
       ==
     --
-=|  state-0
+=|  state-1
 =*  state  -
 |_  bowl=bowl:gall
 +*  this  .
@@ -18,21 +23,36 @@
 ++  on-init  on-init:def
 ++  on-save  !>(state)
 ++  on-load
-  |=  =vase
-  =+  !<(old=state-0 vase)
-  `this(state old)
+  |=  =vase 
+  ^-  (quip card _this)
+  :: this is super messed up because state-0 wasn't tagged with %0
+  :: for later updates need to add %2, %3, etc. on -.q.vase
+  ?.  &(?=(^ q.vase) =(-.q.vase %1))
+      =+  !<(old=state-0 vase)
+      `this(state [%1 old ~])
+  =+  !<(old=versioned-state vase)
+  ?-  -.old
+    %1  `this(state old)
+  ==
+::
 ++  on-poke
   |=  [=mark =vase]
   ?>  =(%blog-action mark)
   =+  !<(act=action:blog vase)
   ?-    -.act
-      %save-file
+      %publish
     :_  this(files (~(put by files) [path html md]:act))
     [%pass /bind %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
   ::
-      %delete-file
+      %unpublish
     :_  this(files (~(del by files) path.act))
     [%pass /bind %arvo %e %disconnect `path.act]~
+  ::
+      %save-draft  
+    `this(drafts (~(put by drafts) [path md]:act))
+  ::
+      %delete-draft
+    `this(drafts (~(del by drafts) path.act))
   ==
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
@@ -41,17 +61,20 @@
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-      [%x %md ^]    ``blog+!>(q:(~(got by files) t.t.path))
-      [%x %html ^]  ``blog+!>(p:(~(got by files) t.t.path))
+      [%x %md ^]     ``blog+!>(q:(~(got by files) t.t.path))
+      [%x %html ^]   ``blog+!>(p:(~(got by files) t.t.path))
+      [%x %draft ^]  ``blog+!>((~(got by drafts) t.t.path))
   ::
       [%x %pages ~]
-    :^  ~  ~  %json
-    !>  :-  %a
-    %+  turn  ~(tap by files)
-    |=([=^path *] `json`(path:enjs:format path))
+    =;  pages  ``json+!>([%a pages])
+    (turn ~(tap by files) |=([=^path *] (path:enjs:format path)))
+  ::
+      [%x %drafts ~]
+    =;  names  ``json+!>([%a names])
+    (turn ~(tap by drafts) |=([=^path *] (path:enjs:format path)))
   ::
       [%x %all-bindings ~]
-    :^  ~  ~  %json  !>
+    =;  the-thing  ``json+!>(the-thing)
     %-  pairs:enjs:format
     %+  turn
       .^  (list [binding:eyre * action:eyre])  %e
@@ -67,7 +90,7 @@
       %logout          [%s '%logout']
       %channel         [%s '%channel']
       %scry            [%s '%scry']
-      %name            [%s '%name']
+      :: %name            [%s '%name'] :: TODO next release
       %four-oh-four    [%s '%four-oh-four']
     ==
   ==
