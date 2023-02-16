@@ -1,0 +1,1 @@
+../../arvo/lib/skeleton.hoon
