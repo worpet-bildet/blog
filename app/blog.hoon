@@ -23,17 +23,14 @@
 ++  on-init  on-init:def
 ++  on-save  !>(state)
 ++  on-load
-  |=  =vase
+  |=  =vase 
   ^-  (quip card _this)
-  ::  if it is state-0, modify it and early return
-  ?:  =(-.vase -:!>(*state-0))
-    =+  !<(old=state-0 vase)
-    `this(state [%1 old ~])
-  ::  else continue as normal
+  :: this is super messed up because state-0 wasn't tagged with %0
+  ?.  &(?=(^ q.vase) =(-.q.vase %1))
+      =+  !<(old=state-0 vase)
+      `this(state [%1 old ~])
   =+  !<(old=versioned-state vase)
-  ?-  -.old
-    %1  `this(state old)
-  ==
+  `this(state old)
 ::
 ++  on-poke
   |=  [=mark =vase]
