@@ -60,13 +60,14 @@
     ^-  [@t json]
     :-  (spat path.binding)
     ?-  -.action
+      %gen             [%s (crip "desk: {<desk.generator.action>}")]
+      %app             [%s (crip "app: {<app.action>}")]
       %authentication  [%s '%authentication']
       %logout          [%s '%logout']
       %channel         [%s '%channel']
       %scry            [%s '%scry']
+      %name            [%s '%name']
       %four-oh-four    [%s '%four-oh-four']
-      %app             [%s (crip "app: {<app.action>}")]
-      %gen             [%s (crip "desk: {<desk.generator.action>}")]
     ==
   ==
 ::
