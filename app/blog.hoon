@@ -48,6 +48,26 @@
     !>  :-  %a
     %+  turn  ~(tap by files)
     |=([=^path *] `json`(path:enjs:format path))
+  ::
+      [%x %all-bindings ~]
+    :^  ~  ~  %json  !>
+    %-  pairs:enjs:format
+    %+  turn
+      .^  (list [binding:eyre * action:eyre])  %e
+          /(scot %p our.bowl)/bindings/(scot %da now.bowl)
+      ==
+    |=  [=binding:eyre * =action:eyre]
+    ^-  [@t json]
+    :-  (spat path.binding)
+    ?-  -.action
+      %authentication  [%s '%authentication']
+      %logout          [%s '%logout']
+      %channel         [%s '%channel']
+      %scry            [%s '%scry']
+      %four-oh-four    [%s '%four-oh-four']
+      %app             [%s (crip "app: {<app.action>}")]
+      %gen             [%s (crip "desk: {<desk.generator.action>}")]
+    ==
   ==
 ::
 ++  on-arvo
