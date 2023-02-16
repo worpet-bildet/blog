@@ -4,12 +4,17 @@
 %-  agent:dbug
 ^-  agent:gall
 =>  |%
-    +$  versioned-state  $%(state-0)
-    +$  state-0
-      $:  files=(map path (pair html=@t md=@t))
+    +$  versioned-state
+      $%  state-1
+      ==
+    +$  state-0  (map path (pair html=@t md=@t))
+    +$  state-1
+      $:  %1
+          files=(map path (pair html=@t md=@t))
+          drafts=(map term md=@t)
       ==
     --
-=|  state-0
+=|  state-1
 =*  state  -
 |_  bowl=bowl:gall
 +*  this  .
@@ -19,8 +24,17 @@
 ++  on-save  !>(state)
 ++  on-load
   |=  =vase
-  =+  !<(old=state-0 vase)
-  `this(state old)
+  ^-  (quip card _this)
+  ::  if it is state-0, modify it and early return
+  ?:  =(-.vase -:!>(*state-0))
+    =+  !<(old=state-0 vase)
+    `this(state [%1 old ~])
+  ::  else continue as normal
+  =+  !<(old=versioned-state vase)
+  ?-  -.old
+    %1  `this(state old)
+  ==
+::
 ++  on-poke
   |=  [=mark =vase]
   ?>  =(%blog-action mark)
@@ -33,6 +47,12 @@
       %delete-file
     :_  this(files (~(del by files) path.act))
     [%pass /bind %arvo %e %disconnect `path.act]~
+  ::
+      %save-draft  
+    `this(drafts (~(put by drafts) [name md]:act))
+  ::
+      %delete-draft
+    `this(drafts (~(del by drafts) name.act))
   ==
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
