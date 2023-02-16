@@ -74,7 +74,7 @@
     (turn ~(tap by drafts) |=([t=term *] [%s t]))
   ::
       [%x %all-bindings ~]
-    :^  ~  ~  %json  !>
+    =;  the-thing  ``json+!>(the-thing)
     %-  pairs:enjs:format
     %+  turn
       .^  (list [binding:eyre * action:eyre])  %e
