@@ -83,7 +83,7 @@
     |=  [=binding:eyre * =action:eyre]
     ^-  [@t json]
     :-  (spat path.binding)
-    ?-  -.action
+    ?+  -.action  [%s 'unknown']
       %gen             [%s (crip "desk: {<desk.generator.action>}")]
       %app             [%s (crip "app: {<app.action>}")]
       %authentication  [%s '%authentication']
