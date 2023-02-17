@@ -91,7 +91,7 @@
       %channel         [%s '%channel']
       %scry            [%s '%scry']
       :: %name            [%s '%name'] :: TODO next release
-      %four-oh-four    [%s '%four-oh-four']
+      :: %four-oh-four    [%s '%four-oh-four']
     ==
   ==
 ::
