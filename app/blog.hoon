@@ -39,9 +39,10 @@
   ?:  &(?=(^ q.vase) =(-.q.vase %0))
       =+  !<(old=state-0 vase)
       =/  new=state-2
-        :+  %2
-          (~(urn by old) |=([=path html=@t md=@t] [html md %default]))
-        [~ ~]
+        :^    %2
+            (~(urn by old) |=([=path html=@t md=@t] [html md %default]))
+          ~
+        (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
       :_  this(state new)
       %-  zing
       %+  turn  ~(tap by old)
@@ -53,9 +54,10 @@
   ?-  -.old
     %1
   =/  new=state-2
-    :+  %2
-      (~(urn by files.old) |=([=path html=@t md=@t] [html md %default]))
-    [drafts.old ~]
+    :^    %2
+        (~(urn by files.old) |=([=path html=@t md=@t] [html md %default]))
+      drafts.old
+    (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
   :_  this(state new)
   %-  zing
   %+  turn  ~(tap by files.old)
@@ -166,7 +168,7 @@
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
   ?+  wire  (on-arvo:def wire sign-arvo)
-    [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
+    [%bind ~]  ~&  >  sign-arvo  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
   ==
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
