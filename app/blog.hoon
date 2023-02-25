@@ -128,7 +128,7 @@
       [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path))
       [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
       [%x %draft ^]    ``blog+!>((~(got by drafts) t.t.path))
-      [%x %theme @ ~]  ``noun+!>((~(got by themes) i.t.t.path))
+      [%x %theme @ ~]  ``blog+!>((~(got by themes) i.t.t.path))
   ::
       [%x %pages ~]
     =;  pages  ``json+!>([%a pages])
