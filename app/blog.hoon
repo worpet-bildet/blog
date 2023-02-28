@@ -8,7 +8,6 @@
       $%  state-1
           state-2
       ==
-    +$  state-0  (map path (pair html=@t md=@t))
     +$  state-1
       $:  %1
           files=(map path (pair html=@t md=@t))
@@ -29,43 +28,39 @@
     card  card:agent:gall
 ++  on-init
   ^-  (quip card _this)
-  `this(themes (~(put by themes) %default default-theme:blog-lib))
+  :-  ~
+  %=  this
+    themes
+    %-  ~(gas by themes)
+    :~  [%default default-theme:blog-lib]
+        [%none '']
+    ==
+  ==
 ++  on-save  !>(state)
 ++  on-load
   |=  =vase 
   ^-  (quip card _this)
-  :: this is super messed up because state-0 wasn't tagged with %0
-  :: for later updates need to add %2, %3, etc. on -.q.vase
-  ?:  &(?=(^ q.vase) =(-.q.vase %0))
-      =+  !<(old=state-0 vase)
-      =/  new=state-2
-        :^    %2
-            (~(urn by old) |=([=path html=@t md=@t] [html md %default]))
-          ~
-        (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
-      :_  this(state new)
-      %-  zing
-      %+  turn  ~(tap by old)
-      |=  [=path *]
-      :-  [%pass /bind %arvo %e %disconnect `path]
-      [%pass /bind %arvo %e %connect `path dap.bowl]~
-  ::
   =+  !<(old=versioned-state vase)
-  ?-  -.old
-    %1
-  =/  new=state-2
-    :^    %2
-        (~(urn by files.old) |=([=path html=@t md=@t] [html md %default]))
-      drafts.old
-    (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
-  :_  this(state new)
-  %-  zing
-  %+  turn  ~(tap by files.old)
-  |=  [=path *]
-  :-  [%pass /bind %arvo %e %disconnect `path]
-  [%pass /bind %arvo %e %connect `path dap.bowl]~
+  ?-    -.old
+      %1
+    :-  %-  zing
+        %+  turn  ~(tap by files.old)
+        |=  [=path *]
+        :~  [%pass /bind %arvo %e %disconnect `path]
+            [%pass /bind %arvo %e %connect `path dap.bowl]
+        ==
+    %=    this
+        state
+      :^    %2
+          (~(urn by files.old) |=([=path html=@t md=@t] [html md %none]))
+        drafts.old
+      %-  ~(gas by *(map @tas @t))
+      :~  [%default default-theme:blog-lib]
+          [%none '']
+      ==
+    ==
   ::
-    %2  `this(state old)
+      %2  `this(state old)
   ==
 ::
 ++  on-poke
