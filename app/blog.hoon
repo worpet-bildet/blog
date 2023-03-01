@@ -77,17 +77,26 @@
   ++  handle-http-request
     |=  [=bowl:gall rid=@tas req=inbound-request:eyre]
     ^-  (quip card _this)
-    =/  got  (~(got by files) (rash url.request.req stap))
+    =/  url-len  (met 3 url.request.req)
+    ?:  =('.md' (cut 3 [(sub url-len 3) 3] url.request.req)) :: get MARKDOWN
+      =/  file  (rash (end [3 (sub url-len 3)] url.request.req) stap)
+      :_  this
+      %^    http-response-cards:blog-lib
+          rid
+        [200 ['Content-Type' 'text/plain; charset=utf-8']~]
+      `(as-octs:mimes:html md:(~(got by files) file))
+    ::
+    =?  url.request.req  =('.html' (cut 3 [(sub url-len 5) 5] url.request.req))
+      (end [3 (sub url-len 5)] url.request.req)
+    =/  file   (~(got by files) (rash url.request.req stap))
+    =/  theme  (~(got by themes) theme.file)
+    =/  post-with-style
+      (cat 3 html:file (add-style:blog-lib theme))
     :_  this
     %^    http-response-cards:blog-lib
         rid
       [200 ['Content-Type' 'text/html; charset=utf-8']~]
-    %-  some
-    %-  as-octs:mimes:html
-    %-  crip
-    %+  weld
-      (trip html.got)
-    (add-style:blog-lib (~(got by themes) theme.got)) 
+    `(as-octs:mimes:html post-with-style)
   ::
   ++  handle-action
     |=  [=bowl:gall act=action:blog]

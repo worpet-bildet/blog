@@ -20,8 +20,8 @@
 ::
 ++  add-style
   |=  css=@t
-  ^-  tape
-  :(weld "<style>" (trip css) "<style/>")
+  ^-  @t
+  (cat 3 (cat 3 '<style>' css) '<style/>')
 ::
 ++  http-response-cards
   |=  [id=@tas hed=response-header:http data=(unit octs)]
