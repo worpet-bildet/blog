@@ -28,14 +28,7 @@
     card  card:agent:gall
 ++  on-init
   ^-  (quip card _this)
-  :-  ~
-  %=  this
-    themes
-    %-  ~(gas by themes)
-    :~  [%default default-theme:blog-lib]
-        [%none '']
-    ==
-  ==
+  `this(themes (~(gas by themes) [%default default-theme:blog-lib]~))
 ++  on-save  !>(state)
 ++  on-load
   |=  =vase 
@@ -54,10 +47,7 @@
       :^    %2
           (~(urn by files.old) |=([=path html=@t md=@t] [html md %none]))
         drafts.old
-      %-  ~(gas by *(map @tas @t))
-      :~  [%default default-theme:blog-lib]
-          [%none '']
-      ==
+      (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
     ==
   ::
       %2  `this(state old)
@@ -89,7 +79,7 @@
     =?  url.request.req  =('.html' (cut 3 [(sub url-len 5) 5] url.request.req))
       (end [3 (sub url-len 5)] url.request.req)
     =/  file   (~(got by files) (rash url.request.req stap))
-    =/  theme  (~(got by themes) theme.file)
+    =/  theme  ?~(got=(~(get by themes) theme.file) '' u.got)
     =/  post-with-style
       (cat 3 html:file (add-style:blog-lib theme))
     :_  this
@@ -127,9 +117,9 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ?+    path  ~
+  ?+    path  (on-peek:def path)
   ::
-      [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path))
+      [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path)) :: TODO bad practice
       [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
       [%x %draft ^]    ``blog+!>((~(got by drafts) t.t.path))
       [%x %theme @ ~]  ``blog+!>((~(got by themes) i.t.t.path))
