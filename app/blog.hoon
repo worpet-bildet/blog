@@ -1,69 +1,138 @@
 /-  blog
-/+  dbug, default-agent
+/+  blog-lib=blog, dbug, default-agent
 ::
 %-  agent:dbug
 ^-  agent:gall
 =>  |%
     +$  versioned-state
       $%  state-1
+          state-2
       ==
-    +$  state-0  (map path (pair html=@t md=@t))
     +$  state-1
       $:  %1
           files=(map path (pair html=@t md=@t))
           drafts=(map path md=@t)
       ==
+    +$  state-2
+      $:  %2
+          files=(map path [html=@t md=@t theme=@tas])
+          drafts=(map path md=@t)
+          themes=(map @tas css=@t)
+      ==
     --
-=|  state-1
+=|  state-2
 =*  state  -
-|_  bowl=bowl:gall
+|_  =bowl:gall
 +*  this  .
     def   ~(. (default-agent this %.n) bowl)
     card  card:agent:gall
-++  on-init  on-init:def
+++  on-init
+  ^-  (quip card _this)
+  :-  ~
+  %=  this
+    themes
+    %-  ~(gas by themes)
+    :~  [%default default-theme:blog-lib]
+        [%none '']
+    ==
+  ==
 ++  on-save  !>(state)
 ++  on-load
   |=  =vase 
   ^-  (quip card _this)
-  :: this is super messed up because state-0 wasn't tagged with %0
-  :: for later updates need to add %2, %3, etc. on -.q.vase
-  ?.  &(?=(^ q.vase) =(-.q.vase %1))
-      =+  !<(old=state-0 vase)
-      `this(state [%1 old ~])
   =+  !<(old=versioned-state vase)
-  ?-  -.old
-    %1  `this(state old)
+  ?-    -.old
+      %1
+    :-  %-  zing
+        %+  turn  ~(tap by files.old)
+        |=  [=path *]
+        :~  [%pass /bind %arvo %e %disconnect `path]
+            [%pass /bind %arvo %e %connect `path dap.bowl]
+        ==
+    %=    this
+        state
+      :^    %2
+          (~(urn by files.old) |=([=path html=@t md=@t] [html md %none]))
+        drafts.old
+      %-  ~(gas by *(map @tas @t))
+      :~  [%default default-theme:blog-lib]
+          [%none '']
+      ==
+    ==
+  ::
+      %2  `this(state old)
   ==
 ::
 ++  on-poke
   |=  [=mark =vase]
-  ?>  =(%blog-action mark)
-  =+  !<(act=action:blog vase)
-  ?-    -.act
-      %publish
-    :_  this(files (~(put by files) [path html md]:act))
-    [%pass /bind %arvo %e %serve `path.act dap.bowl /gen/blog/hoon ~]~
+  |^
+  ?+    mark  (on-poke:def mark vase)
+      %handle-http-request
+    (handle-http-request bowl !<([@tas inbound-request:eyre] vase))
   ::
-      %unpublish
-    :_  this(files (~(del by files) path.act))
-    [%pass /bind %arvo %e %disconnect `path.act]~
-  ::
-      %save-draft  
-    `this(drafts (~(put by drafts) [path md]:act))
-  ::
-      %delete-draft
-    `this(drafts (~(del by drafts) path.act))
+      %blog-action
+    (handle-action bowl !<(act=action:blog vase))
   ==
+  ::
+  ++  handle-http-request
+    |=  [=bowl:gall rid=@tas req=inbound-request:eyre]
+    ^-  (quip card _this)
+    =/  url-len  (met 3 url.request.req)
+    ?:  =('.md' (cut 3 [(sub url-len 3) 3] url.request.req)) :: get MARKDOWN
+      =/  file  (rash (end [3 (sub url-len 3)] url.request.req) stap)
+      :_  this
+      %^    http-response-cards:blog-lib
+          rid
+        [200 ['Content-Type' 'text/plain; charset=utf-8']~]
+      `(as-octs:mimes:html md:(~(got by files) file))
+    ::
+    =?  url.request.req  =('.html' (cut 3 [(sub url-len 5) 5] url.request.req))
+      (end [3 (sub url-len 5)] url.request.req)
+    =/  file   (~(got by files) (rash url.request.req stap))
+    =/  theme  (~(got by themes) theme.file)
+    =/  post-with-style
+      (cat 3 html:file (add-style:blog-lib theme))
+    :_  this
+    %^    http-response-cards:blog-lib
+        rid
+      [200 ['Content-Type' 'text/html; charset=utf-8']~]
+    `(as-octs:mimes:html post-with-style)
+  ::
+  ++  handle-action
+    |=  [=bowl:gall act=action:blog]
+    ^-  (quip card _this)
+    ?-    -.act
+        %publish
+      :_  this(files (~(put by files) [path html md theme]:act))
+      [%pass /bind %arvo %e %connect `path.act dap.bowl]~
+    ::
+        %unpublish
+      :_  this(files (~(del by files) path.act))
+      [%pass /bind %arvo %e %disconnect `path.act]~
+    ::
+      %save-draft    `this(drafts (~(put by drafts) [path md]:act))
+      %delete-draft  `this(drafts (~(del by drafts) path.act))
+      %save-theme    `this(themes (~(put by themes) [theme css]:act))
+      %delete-theme  `this(themes (~(del by themes) theme.act))
+    ==
+  --
+::
 ++  on-agent  on-agent:def
-++  on-watch  on-watch:def
+++  on-watch
+  |=  =path
+  ^-  (quip card _this)
+  ?>  ?=([%http-response *] path)
+  `this
+::
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
   ?+    path  ~
   ::
-      [%x %md ^]     ``blog+!>(q:(~(got by files) t.t.path))
-      [%x %html ^]   ``blog+!>(p:(~(got by files) t.t.path))
-      [%x %draft ^]  ``blog+!>((~(got by drafts) t.t.path))
+      [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path))
+      [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
+      [%x %draft ^]    ``blog+!>((~(got by drafts) t.t.path))
+      [%x %theme @ ~]  ``blog+!>((~(got by themes) i.t.t.path))
   ::
       [%x %pages ~]
     =;  pages  ``json+!>([%a pages])
@@ -72,6 +141,10 @@
       [%x %drafts ~]
     =;  names  ``json+!>([%a names])
     (turn ~(tap by drafts) |=([=^path *] (path:enjs:format path)))
+  ::
+      [%x %themes ~]
+    =;  themes  ``json+!>([%a themes])
+    (turn ~(tap by themes) |=([t=@tas *] s+t))
   ::
       [%x %all-bindings ~]
     =;  the-thing  ``json+!>(the-thing)
