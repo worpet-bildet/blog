@@ -136,6 +136,10 @@
     =;  themes  ``json+!>([%a themes])
     (turn ~(tap by themes) |=([t=@tas *] s+t))
   ::
+      [%x %active-theme ^]
+    =;  theme  ``json+!>(s+theme)
+    theme:(~(got by files) t.t.path)
+  ::
       [%x %all-bindings ~]
     =;  the-thing  ``json+!>(the-thing)
     %-  pairs:enjs:format
