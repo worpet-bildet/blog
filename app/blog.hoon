@@ -91,6 +91,7 @@
   ++  handle-action
     |=  [=bowl:gall act=action:blog]
     ^-  (quip card _this)
+    ?>  =(src.bowl our.bowl)
     ?-    -.act
         %publish
       :_  this(files (~(put by files) [path html md theme]:act))
