@@ -6,15 +6,19 @@
     color : black;
     text-align: center;
   }
+  p {
+    text-align: justify;
+  }
   img {
-      margin: auto;
-      max-height: 300px;
-      display: block;
+    margin: auto;
+    max-height: 300px;
+    display: block;
   }
   body {
-      margin : 7vw;
-      font-size : 3vh;
-      color: #393939
+    margin : 7vw;
+    font-size : 3vh;
+    color: #393939;
+    background-color: white;
   }
   '''
 ::
