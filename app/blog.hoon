@@ -100,6 +100,26 @@
       :_  this(files (~(del by files) path.act))
       [%pass /bind %arvo %e %disconnect `path.act]~
     ::
+        %export
+      =/  soba-html
+        %+  turn  ~(tap by files)
+          |=  [=path html=@t md=@t theme=@tas]
+            =/  t  ?~(got=(~(get by themes) theme) '' u.got)
+            [[%export %published (snoc path %html)] %ins %html !>((cat 3 html (add-style:blog-lib t)))]
+      =/  soba-md
+        %+  turn  ~(tap by drafts)
+          |=  [=path md=@t]
+            [[%export %drafts (snoc path %md)] %ins %md !>([md ~])]
+      =/  soba-css
+        %+  turn  ~(tap by themes)
+          |=  [theme=@tas css=@t]
+            [[%export %themes (snoc [theme]~ %css)] %ins %css !>(css)]
+      :_  this
+      :~  [%pass /info %arvo %c %info %blog %& soba-html]
+          [%pass /info %arvo %c %info %blog %& soba-md]
+          [%pass /info %arvo %c %info %blog %& soba-css]
+      ==
+    ::
       %save-draft    `this(drafts (~(put by drafts) [path md]:act))
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
