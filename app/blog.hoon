@@ -101,19 +101,29 @@
       [%pass /bind %arvo %e %disconnect `path.act]~
     ::
         %export
-      =/  soba-html
+      =/  soba-html=soba:clay
+        %-  zing
         %+  turn  ~(tap by files)
-          |=  [=path html=@t md=@t theme=@tas]
-            =/  t  ?~(got=(~(get by themes) theme) '' u.got)
-            [[%export %published (snoc path %html)] %ins %html !>((cat 3 html (add-style:blog-lib t)))]
-      =/  soba-md
+        |=  [=path html=@t md=@t theme=@tas]
+        ^-  soba:clay
+        =/  t  ?~(got=(~(get by themes) theme) '' u.got)
+        :~  :^  [%export %published %html (snoc path %html)]
+              %ins  %html
+            !>((cat 3 html (add-style:blog-lib t)))
+            :^  [%export %published %md (snoc path %md)]
+              %ins  %md
+            !>([md ~])
+        ==
+      =/  soba-md=soba:clay
         %+  turn  ~(tap by drafts)
-          |=  [=path md=@t]
-            [[%export %drafts (snoc path %md)] %ins %md !>([md ~])]
-      =/  soba-css
+        |=  [=path md=@t]
+        ^-  (pair ^path miso:clay)
+        [[%export %drafts (snoc path %md)] %ins %md !>([md ~])]
+      =/  soba-css=soba:clay
         %+  turn  ~(tap by themes)
-          |=  [theme=@tas css=@t]
-            [[%export %themes (snoc [theme]~ %css)] %ins %css !>(css)]
+        |=  [theme=@tas css=@t]
+        ^-  (pair path miso:clay)
+        [[%export %themes (snoc [theme]~ %css)] %ins %css !>(css)]
       :_  this
       :~  [%pass /info %arvo %c %info %blog %& soba-html]
           [%pass /info %arvo %c %info %blog %& soba-md]
@@ -160,38 +170,6 @@
     =;  theme  ``json+!>(s+theme)
     theme:(~(got by files) t.t.path)
   ::
-        [%x %export ~]
-    =;  export  ``json+!>(export)
-    %-  pairs:enjs:format
-      :~
-        :-  'published'
-          :-  %a
-            %+  turn  ~(tap by files)
-              |=  [=^path html=@t md=@t theme=@tas]
-              :-  %a
-                :~  (path:enjs:format path)
-                    (tape:enjs:format [html ~])
-                    (tape:enjs:format [md ~])
-                    s+theme
-                ==
-        :-  'drafts'
-          :-  %a
-            %+  turn  ~(tap by drafts)
-              |=  [=^path md=@t]
-              :-  %a
-                :~  (path:enjs:format path)
-                    (tape:enjs:format [md ~])
-                ==
-        :-  'themes'
-          :-  %a
-            %+  turn  ~(tap by themes)
-              |=  [theme=@tas css=@t]
-              :-  %a
-                :~  (path:enjs:format [theme ~])
-                    (tape:enjs:format [css ~])
-                ==
-      ==
-    ::
       [%x %all-bindings ~]
     =;  the-thing  ``json+!>(the-thing)
     %-  pairs:enjs:format
