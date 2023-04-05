@@ -1,1 +1,1 @@
-../../webterm/sur/docket.hoon
+../../landscape/sur/docket.hoon
