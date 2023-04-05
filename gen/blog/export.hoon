@@ -1,0 +1,4 @@
+:-  %say
+|=  *
+:-  %blog-action
+[%export ~]
