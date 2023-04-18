@@ -131,6 +131,35 @@
           [%pass /info %arvo %c %info %blog %& soba-css]
       ==
     ::
+        %import
+      :: One thing this does not do is actually publish the new html files
+      =/  all-files  ~(tap of files.act)
+      |-
+      ?:  (test all-files ~)  `this
+      %.  (rear all-files)
+      |=  [=path content=*]
+      %=  ^$
+        all-files  (snip all-files)
+        this
+        ?+  (rear path)  this
+          %md
+            =+  content=(of-wain:format ((list cord) content))
+            ?:  ?=(%published (snag 0 path))
+              =/  file-name  (oust [0 2] (snip path))
+              =/  file  (~(gut by files) file-name [html='' md='' theme=%default])
+              this(files (~(put by files) file-name file(md content)))
+            =/  draft-name  (oust [0 1] (snip path))
+            this(drafts (~(put by drafts) [path=draft-name md=content]))
+          %css
+            =/  theme-name  (@tas (rear (oust [0 1] (snip path))))
+            this(themes (~(put by themes) [theme-name css=(@t (@tas content))]))
+          %html
+            =/  file-name  (oust [0 2] (snip path))
+            =/  file  (~(gut by files) file-name [html='' md='' theme=%default])
+            this(files (~(put by files) file-name file(html (@t (@tas content)))))
+        ==
+      ==
+    ::
       %save-draft    `this(drafts (~(put by drafts) [path md]:act))
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
