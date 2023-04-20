@@ -1,4 +1,4 @@
 :-  %say
-|=  *
+|=  [[*] [css=? ~] ~]
 :-  %blog-action
-[%export ~]
+[%export css]
