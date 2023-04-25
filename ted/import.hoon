@@ -49,10 +49,12 @@
     =/  draft-name  (oust [0 1] (snip path))
     =/  draft  (~(gut by dra.imp) draft-name [md=''])
     imp(dra (~(put by dra.imp) draft-name draft(md content)))
+  ::
       %css
     =/  theme-name  (@tas (rear (oust [0 1] (snip path))))
     =/  theme  (~(gut by thm.imp) theme-name [css=''])
     imp(thm (~(put by thm.imp) theme-name theme(css (@t (@tas content)))))
+  ::
       %html
     =/  file-name  (oust [0 2] (snip path))
     =/  file  (~(gut by pub.imp) file-name [html='' md='' theme=%default])
