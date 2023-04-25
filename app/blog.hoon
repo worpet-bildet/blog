@@ -147,10 +147,6 @@
           [%pass /info %arvo %c %info %blog %& soba-meta]
       ==
     ::
-        %import
-      :_  this
-      [%pass /result %arvo %k %fard q.byk.bowl %import %import !>(act)]~
-    ::
       %save-draft  `this(drafts (~(put by drafts) [path md]:act))
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
