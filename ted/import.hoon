@@ -15,10 +15,10 @@
   ?:  (test dir.arch ~)
     =/  mark
     ?+  (rear files-path)  !!
-      %md  wain
-      %html  @t
-      %css  @t
-      %noun  noun
+        %md  wain
+        %html  @t
+        %css  @t
+        %noun  noun
     ==
     =/  content  .^(mark %cx files-path)
     :-  [~ content]
