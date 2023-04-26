@@ -102,15 +102,8 @@
       [%pass /bind %arvo %e %disconnect `path.act]~
     ::
         %export
-      =|  theme-export=(map path @tas)
-      =/  files-list  ~(tap by files)
-      =.  theme-export
-      |-  ?:  (test files-list ~)  theme-export
-        =/  [=path html=@t md=@t theme=@tas]  (rear files-list)
-        %=  $
-          theme-export  (~(put by theme-export) path theme)
-          files-list  (snip files-list)
-        ==
+      =/  theme-export=(map path @tas)
+        (~(urn by files) |=([* * * theme=@tas] theme))
       =/  soba-meta=soba:clay
         ^-  soba:clay
         [[%export %published %meta %noun ~] [%ins %noun !>(theme-export)]]~
