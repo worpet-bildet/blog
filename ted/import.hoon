@@ -73,21 +73,20 @@
       %blog-action
   ==
 =.  cards
-;:  welp
-  cards
+  ;:  welp
+    cards
 
-  %+  turn  ~(tap by pub.imp)
-  |=  [=path html=@t md=@t theme=@tas]
-  (welp act !>([%publish path html md (~(gut by thm-map) path %default)]))
+    %+  turn  ~(tap by pub.imp)
+    |=  [=path html=@t md=@t theme=@tas]
+    (welp act !>([%publish path html md (~(gut by thm-map) path %default)]))
 
-  %+  turn  ~(tap by dra.imp)
-  |=  [=path md=@t]
-  (welp act !>([%save-draft path md]))
+    %+  turn  ~(tap by dra.imp)
+    |=  [=path md=@t]
+    (welp act !>([%save-draft path md]))
 
-  %+  turn  ~(tap by thm.imp)
-  |=  [theme=@tas css=@t]
-  (welp act !>([%save-theme theme css]))
-
-==
+    %+  turn  ~(tap by thm.imp)
+    |=  [theme=@tas css=@t]
+    (welp act !>([%save-theme theme css]))
+  ==
 ;<  ~  bind:m  (send-raw-cards cards)
 (pure:m !>(~))
