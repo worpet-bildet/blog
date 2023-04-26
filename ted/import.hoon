@@ -25,19 +25,20 @@
     (~(urn by dir.arch) |=([name=@ta ~] ^$(files-path (snoc files-path name))))
   :-  fil.arch
   (~(urn by dir.arch) |=([name=@ta ~] ^$(files-path (snoc files-path name))))
-
-=/  all-files  ~(tap of files)
-=/  imp  :+
-  pub=*(map path [html=@t md=@t theme=@tas])
-  dra=*(map path md=@t)
-  thm=*(map @tas css=@t)
+::
+=|  $=  imp
+    $:  pub=(map path [html=@t md=@t theme=@tas])
+        dra=(map path md=@t)
+        thm=(map @tas css=@t)
+    ==
 =.  imp
+  =/  all-files  ~(tap of files)
   |-
-  ?:  =(all-files ~)  imp
-  %.  (rear all-files)
+  ?~  all-files  imp
+  %.  i.all-files
   |=  [=path content=*]
   %=  ^$
-    all-files  (snip all-files)
+    all-files  t.all-files
     imp
     ?+  (rear path)  imp
         %md
@@ -61,32 +62,22 @@
       imp(pub (~(put by pub.imp) file-name file(html (@t (@tas content)))))
     ==
   ==
-=|  cards=(list card:agent:gall)
 =/  thm-map  ;;  (map path @tas)
   .^(noun %cx /(scot %p our)/blog/(scot %da now)/import/published/meta/noun)
-=/  act
-  :~  %pass
-      /poke
-      %agent
-      [our %blog]
-      %poke
-      %blog-action
-  ==
-=.  cards
-  ;:  welp
-    cards
-
-    %+  turn  ~(tap by pub.imp)
-    |=  [=path html=@t md=@t theme=@tas]
-    (welp act !>([%publish path html md (~(gut by thm-map) path %default)]))
-
-    %+  turn  ~(tap by dra.imp)
-    |=  [=path md=@t]
-    (welp act !>([%save-draft path md]))
-
-    %+  turn  ~(tap by thm.imp)
-    |=  [theme=@tas css=@t]
-    (welp act !>([%save-theme theme css]))
+=/  act  |=(=vase [%pass /poke %agent [our %blog] %poke %blog-action vase])
+=/  cards=(list card:agent:gall)
+  %-  zing
+  :~  %+  turn  ~(tap by pub.imp)
+      |=  [=path html=@t md=@t theme=@tas]
+      (act !>([%publish path html md (~(gut by thm-map) path %default)]))
+  ::
+      %+  turn  ~(tap by dra.imp)
+      |=  [=path md=@t]
+      (act !>([%save-draft path md]))
+  ::
+      %+  turn  ~(tap by thm.imp)
+      |=  [theme=@tas css=@t]
+      (act !>([%save-theme theme css]))
   ==
 ;<  ~  bind:m  (send-raw-cards cards)
 (pure:m !>(~))

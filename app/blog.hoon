@@ -214,7 +214,6 @@
   ^-  (quip card _this)
   ?+  wire  (on-arvo:def wire sign-arvo)
     [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
-    [%result ~]  `this
   ==
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
