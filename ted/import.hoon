@@ -20,8 +20,7 @@
         %css  @t
         %noun  noun
     ==
-    =/  content  .^(mark %cx files-path)
-    :-  [~ content]
+    :-  [~ .^(mark %cx files-path)]
     (~(urn by dir.arch) |=([name=@ta ~] ^$(files-path (snoc files-path name))))
   :-  fil.arch
   (~(urn by dir.arch) |=([name=@ta ~] ^$(files-path (snoc files-path name))))
