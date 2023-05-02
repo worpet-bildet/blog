@@ -36,9 +36,9 @@
   ?~  all-files  imp
   %.  i.all-files
   |=  [=path content=*]
-  %=  ^$
-    all-files  t.all-files
-    imp
+  %=    ^$
+      all-files  t.all-files
+      imp
     ?+  (rear path)  imp
         %md
       =+  content=(of-wain:format ((list cord) content))
@@ -64,7 +64,8 @@
 =/  thm-map  ;;  (map path @tas)
   .^(noun %cx /(scot %p our)/blog/(scot %da now)/import/published/meta/noun)
 =/  act  |=(=vase [%pass /poke %agent [our %blog] %poke %blog-action vase])
-=/  cards=(list card:agent:gall)
+;<  ~  bind:m
+  %-  send-raw-cards
   %-  zing
   :~  %+  turn  ~(tap by pub.imp)
       |=  [=path html=@t md=@t theme=@tas]
@@ -78,5 +79,4 @@
       |=  [theme=@tas css=@t]
       (act !>([%save-theme theme css]))
   ==
-;<  ~  bind:m  (send-raw-cards cards)
 (pure:m !>(~))
