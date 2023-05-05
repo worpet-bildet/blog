@@ -102,6 +102,11 @@
       [%pass /bind %arvo %e %disconnect `path.act]~
     ::
         %export
+      =/  theme-export=(map path @tas)
+        (~(urn by files) |=([* * * theme=@tas] theme))
+      =/  soba-meta=soba:clay
+        ^-  soba:clay
+        [[%export %published %meta %noun ~] [%ins %noun !>(theme-export)]]~
       =/  soba-html=soba:clay
         %-  zing
         %+  turn  ~(tap by files)
@@ -110,7 +115,10 @@
         =/  t  ?~(got=(~(get by themes) theme) '' u.got)
         :~  :^  [%export %published %html (snoc path %html)]
               %ins  %html
-            !>((cat 3 html (add-style:blog-lib t)))
+            ?:  css.act
+              !>((cat 3 html (add-style:blog-lib t)))
+            !>(html)
+            ::
             :^  [%export %published %md (snoc path %md)]
               %ins  %md
             !>([md ~])
@@ -129,9 +137,10 @@
       :~  [%pass /info %arvo %c %info %blog %& soba-html]
           [%pass /info %arvo %c %info %blog %& soba-md]
           [%pass /info %arvo %c %info %blog %& soba-css]
+          [%pass /info %arvo %c %info %blog %& soba-meta]
       ==
     ::
-      %save-draft    `this(drafts (~(put by drafts) [path md]:act))
+      %save-draft  `this(drafts (~(put by drafts) [path md]:act))
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
       %delete-theme  `this(themes (~(del by themes) theme.act))
