@@ -18,10 +18,9 @@ Install %blog with
 ```
 
 ## Export
+If you want to move your blog to another Urbit, run `:blog|export %.y`. If you want to serve your blog from a normal server, run `:blog|export %.n`. The file format for each of these cases is slightly different. 
 
-You can export your %blog with `:blog|export %.y` in the dojo. This will create a folder inside your blog desk called `/export`. You can pass `%.n` instead if you don't want the css to appended to the exporte HTML.
-
-To see it, ensure you have mounted the blog desk with `|mount %blog`.
+To see it, ensure you have mounted the blog desk with `|mount %blog`, and it will appear in unix.
 
 ## Import
 
