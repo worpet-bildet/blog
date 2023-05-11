@@ -14,11 +14,26 @@
 Install %blog with
 
 ```
-|install ~hanrut-sillet-dachus-tiprel blog
+|install ~hanrut-sillet-dachus-tiprel %blog
 ```
 
 ## Export
+If you want to move your blog to another Urbit, run `:blog|export %.y`. If you want to serve your blog from a normal server, run `:blog|export %.n`. The file format for each of these cases is slightly different. 
 
-You can export your %blog with `:blog|export` in the dojo. This will create a folder inside your blog desk called `/export`.
+To see it, ensure you have mounted the blog desk with `|mount %blog`, and it will appear in unix.
 
-To see it, ensure you have mounted the blog desk with `|mount %blog`.
+## Import
+
+After an export (or if you have files from elsewhere), you can import files into %blog. First make sure they have the same structure as an export, it should look something like this in your desk:
+
+```
+/blog
+  /import
+    /published
+      /md
+      /html
+    /drafts
+    /themes
+```
+
+Then run `-blog!import` in the dojo.
