@@ -181,15 +181,15 @@
     |=  [=binding:eyre * =action:eyre]
     ^-  [@t json]
     :-  (spat path.binding)
-    ?+  -.action  [%s 'unknown']
+    ?-  -.action
       %gen             [%s (crip "desk: {<desk.generator.action>}")]
       %app             [%s (crip "app: {<app.action>}")]
       %authentication  [%s '%authentication']
       %logout          [%s '%logout']
       %channel         [%s '%channel']
       %scry            [%s '%scry']
-      :: %name            [%s '%name'] :: TODO next release
-      :: %four-oh-four    [%s '%four-oh-four']
+      %name            [%s '%name']
+      %four-oh-four    [%s '%four-oh-four']
     ==
   ==
 ::
