@@ -108,13 +108,12 @@
       %+  turn  ~(tap by files)
       |=  [=path html=@t md=@t theme=@tas]
       ^-  soba:clay
-      =/  t  ?~(got=(~(get by themes) theme) '' u.got)
-      :~  :^  [%export %published %html (snoc path %html)]
-            %ins  %html
-          !>((cat 3 html (add-style:blog-lib t)))
-          :^  [%export %published %md (snoc path %md)]
-            %ins  %md
-          !>([md ~])
+      =/  tem  (~(gut by themes) theme '')
+      :~  :-  [%export %published %html (snoc path %html)]
+          [%ins %html !>((cat 3 html (add-style:blog-lib tem)))]
+      ::
+          :-  [%export %published %md (snoc path %md)]
+          [%ins %md !>([md ~])]
       ==
     =/  soba-md=soba:clay
       %+  turn  ~(tap by drafts)
@@ -125,7 +124,7 @@
       %+  turn  ~(tap by themes)
       |=  [theme=@tas css=@t]
       ^-  (pair path miso:clay)
-      [[%export %themes (snoc [theme]~ %css)] %ins %css !>(css)]
+      [[%export %themes theme %css ~] %ins %css !>(css)]
     :_  this
     :~  [%pass /info %arvo %c %info %blog %& soba-html]
         [%pass /info %arvo %c %info %blog %& soba-md]
