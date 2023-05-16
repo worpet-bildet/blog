@@ -25,7 +25,7 @@
 ++  add-style
   |=  css=@t
   ^-  @t
-  (cat 3 (cat 3 '<style>' css) '<style/>')
+  (cat 3 (cat 3 '<style>' css) '</style>')
 ::
 ++  http-response-cards
   |=  [id=@tas hed=response-header:http data=(unit octs)]

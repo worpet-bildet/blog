@@ -147,7 +147,7 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ?+    path  (on-peek:def path)
+  ?+    path  ~&  "unexpected scry into {<dap.bowl>} on path {<path>}"  ~
   ::
       [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path)) :: TODO bad practice
       [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
