@@ -51,7 +51,7 @@
     ==
   ::
       %2
-    :_  this
+    :_  this(state old)
     %+  turn  ~(tap by files.old)
     |=  [=path *]
     [%pass /bind %arvo %e %connect `path dap.bowl]
