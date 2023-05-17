@@ -87,7 +87,7 @@
             [200 ['Content-Type' 'text/plain; charset=utf-8']~]
             `(as-octs:mimes:html md.act)
         ==
-    
+    ::
         :*  %pass  /bind  %arvo  %e
             %set-response  (spat path.act)
             ~  %.n  %payload
@@ -137,17 +137,10 @@
     %delete-theme  `this(themes (~(del by themes) theme.act))
   ==
 ::
-++  on-agent  on-agent:def
-++  on-watch
-  |=  =path
-  ^-  (quip card _this)
-  ?>  ?=([%http-response *] path)
-  `this
-::
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  ?+    path  ~&  "unexpected scry into {<dap.bowl>} on path {<path>}"  ~
+  ?+    path  ~&("unexpected scry into {<dap.bowl>} on path {<path>}" ~)
   ::
       [%x %md ^]       ``blog+!>(+<:(~(got by files) t.t.path)) :: TODO bad practice
       [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
@@ -173,6 +166,9 @@
       [%x %all-bindings ~]
     =;  the-thing  ``json+!>(the-thing)
     %-  pairs:enjs:format
+    %+  weld
+      %+  turn  ~(tap by files)
+      |=([=^path *] (spat path)^s+'app: %blog')
     %+  turn
       .^  (list [binding:eyre * action:eyre])  %e
           /(scot %p our.bowl)/bindings/(scot %da now.bowl)
@@ -198,6 +194,8 @@
   ?+  wire  (on-arvo:def wire sign-arvo)
     [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
   ==
+++  on-agent  on-agent:def
+++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
 ++  on-fail   on-fail:def
 --
