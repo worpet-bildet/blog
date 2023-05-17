@@ -52,7 +52,6 @@
   ::
       %2
     :_  this
-    %-  zing
     %+  turn  ~(tap by files.old)
     |=  [=path *]
     [%pass /bind %arvo %e %connect `path dap.bowl]
