@@ -50,7 +50,12 @@
       (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
     ==
   ::
-      %2  `this(state old)
+      %2
+    :_  this
+    %-  zing
+    %+  turn  ~(tap by files.old)
+    |=  [=path *]
+    [%pass /bind %arvo %e %connect `path dap.bowl]
   ==
 ::
 ++  on-poke
