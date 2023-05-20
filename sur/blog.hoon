@@ -8,4 +8,5 @@
       [%save-theme theme=@tas css=@t]
       [%delete-theme theme=@tas]
   ==
++$  sub  [%sub =ship]
 --

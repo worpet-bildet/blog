@@ -1,5 +1,6 @@
-/-  blog
-/+  blog-lib=blog, dbug, default-agent
+/-  blog, paths
+/+  blog-lib=blog, dbug, default-agent, *sss
+=/  pub-paths  (mk-pubs paths ,[%paths ~])
 ::
 %-  agent:dbug
 ^-  agent:gall
@@ -7,6 +8,7 @@
     +$  versioned-state
       $%  state-1
           state-2
+          state-3
       ==
     +$  state-1
       $:  %1
@@ -19,13 +21,22 @@
           drafts=(map path md=@t)
           themes=(map @tas css=@t)
       ==
+    +$  state-3
+      $:  %3
+          files=(map path [html=@t md=@t theme=@tas])
+          drafts=(map path md=@t)
+          themes=(map @tas css=@t)
+          =_pub-paths
+      ==
     +$  card  $+(card card:agent:gall)
     --
-=|  state-2
+=|  state-3
 =*  state  -
 |_  =bowl:gall
-+*  this  .
-    def   ~(. (default-agent this %.n) bowl)
++*  this      .
+    def       ~(. (default-agent this %.n) bowl)
+    du-paths  =/  du  (du paths ,[%paths ~])
+              (du pub-paths bowl -:!>(*result:du))
 ++  on-init
   ^-  (quip card _this)
   `this(themes (~(gas by themes) [%default default-theme:blog-lib]~))
@@ -44,16 +55,20 @@
         ==
     %=    this
         state
-      :^    %2
+      :*  %3
           (~(urn by files.old) |=([=path html=@t md=@t] [html md %none]))
-        drafts.old
-      (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
+          drafts.old
+          (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
+          pub-paths
+      ==
     ==
   ::
       %2
-    :_  this(state old)
-    %-  zing
-    %+  turn  ~(tap by files.old)
+    =.  state  [%3 files.old drafts.old themes.old pub-paths]
+    =^  cards  pub-paths  (give:du-paths [%paths ~] [%init ~(key by files)])
+    :_  this
+    %+  welp  cards
+    %-  zing  %+  turn  ~(tap by files.old)
     |=  [=path html=@t md=@t theme=@tas]
     :~  [%pass /bind %arvo %e %disconnect `path]
         :*  %pass  /bind  %arvo  %e
@@ -69,72 +84,104 @@
             [200 ['Content-Type' 'text/plain; charset=utf-8']~]
             `(as-octs:mimes:^html md)
     ==  ==
+  ::
+      %3
+    :_  this(state old)
+    %-  zing  %+  turn  ~(tap by files.old)
+    |=  [=path html=@t md=@t theme=@tas]
+    :~  [%pass /bind %arvo %e %disconnect `path]
+        :*  %pass  /bind  %arvo  %e
+            %set-response  (spat path)
+            ~  %.n  %payload
+            [200 ['Content-Type' 'text/html; charset=utf-8']~]
+            =/  tem=@t  (~(gut by themes.old) theme '')
+            `(as-octs:mimes:^html (cat 3 html (add-style:blog-lib tem)))
+        ==
+        :*  %pass  /bind  %arvo  %e
+            %set-response  (cat 3 (spat path) '.md')
+            ~  %.n  %payload
+            [200 ['Content-Type' 'text/plain; charset=utf-8']~]
+            `(as-octs:mimes:^html md)
+    ==  ==
+
   ==
 ::
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)
-  ~|  "unexpected poke to {<dap.bowl>} with mark {<mark>}"
-  ?>  =(%blog-action mark)
-  =+  !<(act=action:blog vase)
-  ?>  =(src.bowl our.bowl)
-  ?-    -.act
-      %publish
-    :_  this(files (~(put by files) [path html md theme]:act))
-    :~  :*  %pass  /bind  %arvo  %e
-            %set-response  (cat 3 (spat path.act) '.md')
-            ~  %.n  %payload
-            [200 ['Content-Type' 'text/plain; charset=utf-8']~]
-            `(as-octs:mimes:html md.act)
-        ==
-    
-        :*  %pass  /bind  %arvo  %e
-            %set-response  (spat path.act)
-            ~  %.n  %payload
-            [200 ['Content-Type' 'text/html; charset=utf-8']~]
-            =/  tem=@t  (~(gut by themes) theme.act '')
-            `(as-octs:mimes:html (cat 3 html.act (add-style:blog-lib tem)))
-    ==  ==
-  ::
-      %unpublish
-    :_  this(files (~(del by files) path.act))
-    :~  [%pass /bind %arvo %e %set-response `@t`(cat 3 (spat path.act) '.md') ~]
-        [%pass /bind %arvo %e %set-response (spat path.act) ~]
-    ==
-  ::
-      %export
-    =/  soba-html=soba:clay
-      %-  zing
-      %+  turn  ~(tap by files)
-      |=  [=path html=@t md=@t theme=@tas]
-      ^-  soba:clay
-      =/  tem  (~(gut by themes) theme '')
-      :~  :-  [%export %published %html (snoc path %html)]
-          [%ins %html !>((cat 3 html (add-style:blog-lib tem)))]
-      ::
-          :-  [%export %published %md (snoc path %md)]
-          [%ins %md !>([md ~])]
+  ?+    mark
+      ~|  "unexpected poke to {<dap.bowl>} with mark {<mark>}"  !!
+    ::
+      %blog-action
+    =+  !<(act=action:blog vase)
+    ?>  =(src.bowl our.bowl)
+    ?-    -.act
+        %publish
+      =^  cards  pub-paths  (give:du-paths [%paths ~] [%post path.act])
+      :_  this(files (~(put by files) [path html md theme]:act))
+      %+  welp  cards
+      :~  :*  %pass  /bind  %arvo  %e
+              %set-response  (cat 3 (spat path.act) '.md')
+              ~  %.n  %payload
+              [200 ['Content-Type' 'text/plain; charset=utf-8']~]
+              `(as-octs:mimes:html md.act)
+          ==
+
+          :*  %pass  /bind  %arvo  %e
+              %set-response  (spat path.act)
+              ~  %.n  %payload
+              [200 ['Content-Type' 'text/html; charset=utf-8']~]
+              =/  tem=@t  (~(gut by themes) theme.act '')
+              `(as-octs:mimes:html (cat 3 html.act (add-style:blog-lib tem)))
+      ==  ==
+    ::
+        %unpublish
+      =^  cards  pub-paths  (give:du-paths [%paths ~] [%depost path.act])
+      :_  this(files (~(del by files) path.act))
+      %+  welp  cards
+      :~  [%pass /bind %arvo %e %set-response `@t`(cat 3 (spat path.act) '.md') ~]
+          [%pass /bind %arvo %e %set-response (spat path.act) ~]
       ==
-    =/  soba-md=soba:clay
-      %+  turn  ~(tap by drafts)
-      |=  [=path md=@t]
-      ^-  (pair ^path miso:clay)
-      [[%export %drafts (snoc path %md)] %ins %md !>([md ~])]
-    =/  soba-css=soba:clay
-      %+  turn  ~(tap by themes)
-      |=  [theme=@tas css=@t]
-      ^-  (pair path miso:clay)
-      [[%export %themes theme %css ~] %ins %css !>(css)]
-    :_  this
-    :~  [%pass /info %arvo %c %info %blog %& soba-html]
-        [%pass /info %arvo %c %info %blog %& soba-md]
-        [%pass /info %arvo %c %info %blog %& soba-css]
+    ::
+        %export
+      =/  soba-html=soba:clay
+        %-  zing
+        %+  turn  ~(tap by files)
+        |=  [=path html=@t md=@t theme=@tas]
+        ^-  soba:clay
+        =/  tem  (~(gut by themes) theme '')
+        :~  :-  [%export %published %html (snoc path %html)]
+            [%ins %html !>((cat 3 html (add-style:blog-lib tem)))]
+        ::
+            :-  [%export %published %md (snoc path %md)]
+            [%ins %md !>([md ~])]
+        ==
+      =/  soba-md=soba:clay
+        %+  turn  ~(tap by drafts)
+        |=  [=path md=@t]
+        ^-  (pair ^path miso:clay)
+        [[%export %drafts (snoc path %md)] %ins %md !>([md ~])]
+      =/  soba-css=soba:clay
+        %+  turn  ~(tap by themes)
+        |=  [theme=@tas css=@t]
+        ^-  (pair path miso:clay)
+        [[%export %themes theme %css ~] %ins %css !>(css)]
+      :_  this
+      :~  [%pass /info %arvo %c %info %blog %& soba-html]
+          [%pass /info %arvo %c %info %blog %& soba-md]
+          [%pass /info %arvo %c %info %blog %& soba-css]
+      ==
+    ::
+      %save-draft    `this(drafts (~(put by drafts) [path md]:act))
+      %delete-draft  `this(drafts (~(del by drafts) path.act))
+      %save-theme    `this(themes (~(put by themes) [theme css]:act))
+      %delete-theme  `this(themes (~(del by themes) theme.act))
     ==
-  ::
-    %save-draft    `this(drafts (~(put by drafts) [path md]:act))
-    %delete-draft  `this(drafts (~(del by drafts) path.act))
-    %save-theme    `this(themes (~(put by themes) [theme css]:act))
-    %delete-theme  `this(themes (~(del by themes) theme.act))
+    ::
+      %sss-to-pub
+    =/  msg  !<(into:du-paths (fled vase))
+    =^  cards  pub-paths  (apply:du-paths msg)
+    [cards this]
   ==
 ::
 ++  on-agent  on-agent:def
