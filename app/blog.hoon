@@ -110,7 +110,7 @@
   |=  [=mark =vase]
   ^-  (quip card _this)
   ?+    mark
-      ~|  "unexpected poke to {<dap.bowl>} with mark {<mark>}"  !!
+      ~|("unexpected poke to {<dap.bowl>} with mark {<mark>}" !!)
     ::
       %blog-action
     =+  !<(act=action:blog vase)
