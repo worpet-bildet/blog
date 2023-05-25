@@ -26,6 +26,7 @@
           files=(map path [html=@t md=@t theme=@tas])
           drafts=(map path md=@t)
           themes=(map @tas css=@t)
+          uri=@t
           =_pub-paths
       ==
     +$  card  $+(card card:agent:gall)
@@ -59,12 +60,13 @@
           (~(urn by files.old) |=([=path html=@t md=@t] [html md %none]))
           drafts.old
           (~(gas by *(map @tas @t)) [%default default-theme:blog-lib]~)
+          uri=*@t
           pub-paths
       ==
     ==
   ::
       %2
-    =.  state  [%3 files.old drafts.old themes.old pub-paths]
+    =.  state  [%3 files.old drafts.old themes.old uri=*@t pub-paths]
     =^  cards  pub-paths  (give:du-paths [%paths ~] [%init ~(key by files)])
     :_  this
     %+  welp  cards
@@ -176,6 +178,7 @@
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
       %delete-theme  `this(themes (~(del by themes) theme.act))
+      %update-uri    `this(uri uri.act)
     ==
     ::
       %sss-to-pub
@@ -193,6 +196,7 @@
       [%x %html ^]     ``blog+!>(-:(~(got by files) t.t.path))
       [%x %draft ^]    ``blog+!>((~(got by drafts) t.t.path))
       [%x %theme @ ~]  ``blog+!>((~(got by themes) i.t.t.path))
+      [%x %uri ~]      ``blog+!>(uri)
   ::
       [%x %pages ~]
     =;  pages  ``json+!>([%a pages])

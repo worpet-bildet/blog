@@ -13,6 +13,7 @@
         [%delete-draft (ot ~[path+pa])]
         [%save-theme (ot ~[theme+so css+so])]
         [%delete-theme (ot ~[theme+so])]
+        [%update-uri (ot ~[uri+so])]
     ==
   --
 ::

@@ -7,6 +7,7 @@
       [%delete-draft =path]
       [%save-theme theme=@tas css=@t]
       [%delete-theme theme=@tas]
+      [%update-uri uri=@t]
   ==
 +$  sub  [%sub =ship]
 --
