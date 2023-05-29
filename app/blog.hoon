@@ -26,7 +26,7 @@
           drafts=(map path md=@t)
           themes=(map @tas css=@t)
           uri=@t
-          =_(mk-pubs blog-paths ,[%paths ~])
+          pub-paths=_(mk-pubs blog-paths ,[%paths ~])
       ==
     +$  card  $+(card card:agent:gall)
     --
