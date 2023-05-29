@@ -1,8 +1,7 @@
 /-  blog, blog-paths
-/+  blog-lib=blog, dbug, default-agent, *sss, verb
+/+  blog-lib=blog, dbug, default-agent, *sss
 ::
 %-  agent:dbug
-%+  verb  &
 ^-  agent:gall
 =>  |%
     +$  versioned-state
