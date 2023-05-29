@@ -11,7 +11,7 @@
 |_  =bowl:gall
 +*  this      .
     default   ~(. (default-agent this %.n) bowl)
-    da-paths  =/  da  (da blog-paths ,[%paths ~])
+    da-blog-paths  =/  da  (da blog-paths ,[%paths ~])
               (da sub-paths bowl -:!>(*result:da) -:!>(*from:da) -:!>(*fail:da))
 ++  on-init
   ^-  (quip card _this)
@@ -30,15 +30,14 @@
   ?+    mark    `this
       %blog-sub
     =/  sub  !<([%sub =ship] vase)
-    =^  cards  sub-paths  (surf:da-paths ship.sub %blog [%paths ~])
+    =^  cards  sub-paths  (surf:da-blog-paths ship.sub %blog [%paths ~])
     [cards this]
     ::
-      %sss-paths
-    =^  cards  sub-paths  (apply:da-paths !<(into:da-paths (fled vase)))
+      %sss-blog-paths
+    =^  cards  sub-paths  (apply:da-blog-paths !<(into:da-blog-paths (fled vase)))
     [cards this]
     ::
       %sss-on-rock
-    ~&  >  "received!"
     `this
   ==
 ++  on-watch  on-watch:default
@@ -52,18 +51,18 @@
   %-  (slog u.p.sign)
   ?+    wire   `this
       [~ %sss %on-rock @ @ @ %paths ~]
-    =.  sub-paths  (chit:da-paths |3:wire sign)
+    =.  sub-paths  (chit:da-blog-paths |3:wire sign)
     `this
     ::
       [~ %sss %scry-request @ @ @ %paths ~]
-    =^  cards  sub-paths  (tell:da-paths |3:wire sign)
+    =^  cards  sub-paths  (tell:da-blog-paths |3:wire sign)
     [cards this]
   ==
 ++  on-arvo
   |=  [=wire sign=sign-arvo]
   ^-  (quip card:agent:gall _this)
   ?+  wire  `this
-    [~ %sss %behn @ @ @ %paths ~]  [(behn:da-paths |3:wire) this]
+    [~ %sss %behn @ @ @ %paths ~]  [(behn:da-blog-paths |3:wire) this]
   ==
 ++  on-fail   on-fail:default
 --
