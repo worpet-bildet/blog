@@ -1,8 +1,9 @@
-/-  blog, paths
-/+  blog-lib=blog, dbug, default-agent, *sss
-=/  pub-paths  (mk-pubs paths ,[%paths ~])
+/-  blog, blog-paths
+/+  blog-lib=blog, dbug, default-agent, *sss, verb
+=/  pub-paths  (mk-pubs blog-paths ,[%paths ~])
 ::
 %-  agent:dbug
+%+  verb  &
 ^-  agent:gall
 =>  |%
     +$  versioned-state
@@ -36,7 +37,7 @@
 |_  =bowl:gall
 +*  this      .
     def       ~(. (default-agent this %.n) bowl)
-    du-paths  =/  du  (du paths ,[%paths ~])
+    du-paths  =/  du  (du blog-paths ,[%paths ~])
               (du pub-paths bowl -:!>(*result:du))
 ++  on-init
   ^-  (quip card _this)
@@ -178,13 +179,16 @@
       %delete-draft  `this(drafts (~(del by drafts) path.act))
       %save-theme    `this(themes (~(put by themes) [theme css]:act))
       %delete-theme  `this(themes (~(del by themes) theme.act))
-      %update-uri    `this(uri uri.act)
+    ::
+        %update-uri
+      =^  cards  pub-paths  (give:du-paths [%paths ~] [%uri uri.act])
+      :_  this(uri uri.act)  cards
     ==
     ::
-      %sss-to-pub
-    =/  msg  !<(into:du-paths (fled vase))
-    =^  cards  pub-paths  (apply:du-paths msg)
-    [cards this]
+        %sss-to-pub
+      =/  msg  !<(into:du-paths (fled vase))
+      =^  cards  pub-paths  (apply:du-paths msg)
+      [cards this]
   ==
 ::
 ++  on-peek
@@ -239,12 +243,7 @@
     ==
   ==
 ::
-++  on-arvo
-  |=  [=wire =sign-arvo]
-  ^-  (quip card _this)
-  ?+  wire  (on-arvo:def wire sign-arvo)
-    [%bind ~]  ?>(?=([%eyre %bound %.y *] sign-arvo) `this)
-  ==
+++  on-arvo   on-arvo:def
 ++  on-agent  on-agent:def
 ++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
