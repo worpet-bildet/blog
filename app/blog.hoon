@@ -1,6 +1,5 @@
 /-  blog, blog-paths
 /+  blog-lib=blog, dbug, default-agent, *sss, verb
-=/  pub-paths  (mk-pubs blog-paths ,[%paths ~])
 ::
 %-  agent:dbug
 %+  verb  &
@@ -28,7 +27,7 @@
           drafts=(map path md=@t)
           themes=(map @tas css=@t)
           uri=@t
-          =_pub-paths
+          =_(mk-pubs blog-paths ,[%paths ~])
       ==
     +$  card  $+(card card:agent:gall)
     --
@@ -106,7 +105,6 @@
             [200 ['Content-Type' 'text/plain; charset=utf-8']~]
             `(as-octs:mimes:^html md)
     ==  ==
-
   ==
 ::
 ++  on-poke
@@ -129,7 +127,7 @@
               [200 ['Content-Type' 'text/plain; charset=utf-8']~]
               `(as-octs:mimes:html md.act)
           ==
-
+      ::
           :*  %pass  /bind  %arvo  %e
               %set-response  (spat path.act)
               ~  %.n  %payload
